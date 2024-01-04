@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.4/axios.min.js" integrity="sha512-ANd7ZJmixP2T0hxOP4bS6hkci01fxyrQSyRdaY7IsWq1WlKsD0WwWBDVDZbnMR7CJZVKCTkDx/q5D5n2C2C+vg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>Product Details</title>
+</head>
+<body>
+
+    <form id="productForm">
+        <label for="productName">Product Name:</label>
+        <input type="text" id="productName" name="productName" required>
+
+        <label for="sellingPrice">Selling Price:</label>
+        <input type="number" id="sellingPrice" name="sellingPrice" required>
+
+        <button type="button" onclick="addProduct()">Add Product</button>
+    </form>
+
+    <div id="productDetails">
+        <h2>Product Details</h2>
+        <ul id="productList"></ul>
+    </div>
+
+    <script>
+        function addProduct() {
+            var productName = document.getElementById("productName").value;
+            var sellingPrice = document.getElementById("sellingPrice").value;
+
+            var data = {
+                "ProductName": productName,
+                "SellingPrice": sellingPrice
+            }
+
+            axios.post("https://crudcrud.com/api/e056deb6ee7b43f8b48dac326a92f6ee/new", data)
+            .then((response) => {
+                var newItem = document.createElement("li");
+                var productId = response.data._id;
+                newItem.innerHTML = `Product:- ${productName}-${sellingPrice}
+                <button onclick="deleteProduct('${productId}')">Delete Product</button>`;
+                document.getElementById("productList").appendChild(newItem);
+                document.getElementById("productForm").reset();
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+
+        function deleteProduct(productId) {
+            axios.delete(`https://crudcrud.com/api/e056deb6ee7b43f8b48dac326a92f6ee/new/${productId}`)
+            .then(() => {
+                var listItem = event.target.parentNode;
+                listItem.remove();
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+        }
+    </script>
+</body>
+</html>
